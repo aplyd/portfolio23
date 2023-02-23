@@ -1,0 +1,23 @@
+# dependencies
+/node_modules
+.npmrc
+pnpm-lock.yaml
+/.husky
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+tsconfig.tsbuildinfo
+
+# env files
+.env
+
+# vercel
+.vercel
