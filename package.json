@@ -15,9 +15,13 @@
   },
   "dependencies": {
     "@next/font": "13.1.6",
+    "@react-three/drei": "^9.56.26",
+    "@react-three/fiber": "^8.11.2",
+    "@types/three": "^0.149.0",
     "next": "13.1.6",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "three": "^0.150.0"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.0.0-beta.50",
