@@ -17,7 +17,8 @@
     ],
     "react/require-default-props": "off",
     "react/function-component-definition": "off",
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
   },
   "parserOptions": {
     "project": "./tsconfig.json"
