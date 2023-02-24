@@ -1,21 +1,55 @@
-import { FC, useRef } from 'react';
+import { FC, useMemo, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import useScrollPos from 'hooks/useScrollPos';
+import { MathUtils } from 'three';
+import vertexShader from '@utils/shaders/vertexShader';
+import fragmentShader from '@utils/shaders/fragmentShader';
 
-const Box: FC<{ scrollY: number | null }> = ({ scrollY }) => {
-  const ref = useRef<THREE.Mesh>(null!);
+const Blob: FC<{ scrollY: number | null }> = () => {
+  const ref = useRef<THREE.Mesh>(null);
+  const hover = useRef(false);
+  const uniforms = useMemo(
+    () => ({
+      u_time: { value: 0 },
+      u_intensity: { value: 0.3 },
+    }),
+    []
+  );
 
-  useFrame(() => {
-    const rotate = scrollY ? scrollY * 0.01 : 0;
-    ref.current.rotation.x = rotate;
-    ref.current.rotation.y = rotate;
-    ref.current.rotation.z = rotate;
+  useFrame((state) => {
+    const { clock } = state;
+    if (ref.current) {
+      (ref.current.material as THREE.ShaderMaterial).uniforms.u_time.value =
+        0.4 * clock.getElapsedTime();
+
+      (
+        ref.current.material as THREE.ShaderMaterial
+      ).uniforms.u_intensity.value = MathUtils.lerp(
+        (ref.current.material as THREE.ShaderMaterial).uniforms.u_intensity
+          .value,
+        hover.current ? 1 : 0.15,
+        0.02
+      );
+    }
   });
 
   return (
-    <mesh ref={ref} scale={1}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="hotpink" />
+    <mesh
+      scale={1}
+      onPointerOver={() => {
+        hover.current = true;
+      }}
+      onPointerOut={() => {
+        hover.current = false;
+      }}
+      ref={ref}
+    >
+      <icosahedronBufferGeometry args={[2, 20]} />
+      <shaderMaterial
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms}
+      />
     </mesh>
   );
 };
@@ -28,7 +62,7 @@ const Background: FC<{}> = () => {
       <Canvas>
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
-        <Box scrollY={scrollY} />
+        <Blob scrollY={scrollY} />
       </Canvas>
     </div>
   );
